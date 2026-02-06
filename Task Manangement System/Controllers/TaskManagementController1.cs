@@ -102,42 +102,6 @@ namespace Task_Manangement_System.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
-
-
-
-        //[HttpPost]
-        //public async Task<IActionResult> TaskCreate(List<TaskCreateRequestModel> model)
-        //{
-        //    try
-        //    {
-        //        using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-        //        {
-        //            using (SqlCommand cmd = new SqlCommand("SPTaskCreate", con))
-        //            {
-        //                cmd.CommandType = CommandType.StoredProcedure;
-
-        //                cmd.Parameters.AddWithValue("@Id", DBNull.Value);
-        //                cmd.Parameters.AddWithValue("@Description", model.FirstOrDefault().Description);
-        //                cmd.Parameters.AddWithValue("@DueDate", model.FirstOrDefault().DueDate);
-        //                cmd.Parameters.AddWithValue("@Status", model.FirstOrDefault().Status);
-        //                cmd.Parameters.AddWithValue("@Remarks", model.FirstOrDefault().Remarks);
-
-        //                cmd.Parameters.AddWithValue("@Mode", "create");
-
-        //                con.Open();
-        //                var newId = await cmd.ExecuteScalarAsync();
-        //                con.Close();
-
-        //                return Json(new { success = true, id = newId });
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, error = ex.Message });
-        //    }
-        //}
-
         public async Task<IActionResult> LoadTaskForm(int id)
         {
             var tasks = new LoadTaskCreateFormPageModel();
