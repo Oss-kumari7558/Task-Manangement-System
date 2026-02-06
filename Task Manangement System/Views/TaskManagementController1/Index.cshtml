@@ -1,0 +1,275 @@
+﻿@model List<TaskCreateRequestModel>
+@{
+	Layout = null;
+}
+
+<head>
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<!-- Toastr CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+	<!-- Toastr JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<div class="container mt-4">
+	<div class="row mb-3">
+		<div class="col-md-8">
+			<Div method="get" class="d-flex">
+				<input type="text" name="searchString" id="searchString" class="form-control me-2" placeholder="🔍 Search tasks..." />
+				<button type="button" id="SearchText" class="btn btn-primary" onclick="SearchTask()">Search</button>
+			</Div>
+		</div>
+		<div class="col-md-4 text-end">
+			<button id="btnloadPopup" class="btn btn-success" onclick="LoadPopup()">➕ Create New Task</button>
+
+		</div>
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-hover table-bordered align-middle">
+			<thead class="table-dark">
+				<tr>
+					<th>Title</th>
+					<th>Status</th>
+					<th>Due Date</th>
+					<th>Description</th>
+					<th>Remarks</th>
+					<th>CreatedBy</th>
+					<th>CreatedOn</th>
+					<th>UpdatedBy</th>
+					<th>LastUpdatedOn</th>
+					<th class="text-center">Actions</th>
+				</tr>
+			</thead>
+
+
+			<tbody id="taskTableBody">
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.Title</td>
+
+						<td>
+							@if (item.Status == "Completed")
+							{
+								<span class="badge bg-success">Completed</span>
+							}
+							else if (item.Status == "Pending")
+							{
+								<span class="badge bg-warning text-dark">Pending</span>
+							}
+							else
+							{
+								<span class="badge bg-secondary">@item.Status</span>
+							}
+						</td>
+
+						<td>@item.DueDate.ToString("dd-MM-yyyy")</td>
+						<td>@item.Description</td>
+						<td>@item.Remarks</td>
+						<td>@item.CreatedBy</td>
+						<td>@item.CreatedOn.ToString("dd-MM-yyyy")</td>
+						<td>@item.UpdatedBy</td>
+						<td>@(item.LastUpdatedOn.ToString("dd-MM-yyyy"))</td>
+						<td class="text-center">
+							<a class="btn btn-warning btn-sm"
+							   onclick="LoadEditPopup(@item.Id)">Edit</a>
+							<a class="btn btn-danger btn-sm"
+							   onclick="DeleteTask(@item.Id)">Delete</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+
+
+		</table>
+	</div>
+
+	<div class="modal fade" id="ModalTaskCreate" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h5 class="modal-title">Task Create</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<div class="modal-body">
+					<input type="hidden" name="CreatedBy" value="@User.Identity?.Name" />
+					<form id="taskForm">
+
+
+
+						<div class="mb-3">
+							<label>Task Title</label>
+							<input type="text" name="Title" id="Title" class="form-control" required />
+						</div>
+
+						<div class="mb-3">
+							<label>Description</label>
+							<textarea name="Description" id="Description" class="form-control" required></textarea>
+						</div>
+
+						<div class="mb-3">
+							<label>Due Date</label>
+							<input type="date" name="DueDate" id="DueDate" class="form-control" required />
+						</div>
+
+						<div class="mb-3">
+							<label>Status</label>
+							<select name="Status" id="Status" class="form-select" required>
+								<option value="" selected disabled>Select status</option>
+								<option value="Pending">Pending</option>
+								<option value="InProgress">In Progress</option>
+								<option value="Completed">Completed</option>
+								<option value="OnHold">On Hold</option>
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<label>Remarks</label>
+							<textarea name="Remarks" id="Remarks" class="form-control" required></textarea>
+						</div>
+					</form>
+
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					<button class="btn btn-success" onclick="SaveTaskCreateData()">Submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@* Edit Form *@
+	<div class="modal fade" id="ModalTaskEdit" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+	</div>
+
+	<nav aria-label="Task pagination">
+		<ul class="pagination justify-content-center">
+			<li class="page-item disabled"><a class="page-link">Previous</a></li>
+			<li class="page-item active"><a class="page-link">1</a></li>
+			<li class="page-item"><a class="page-link">2</a></li>
+			<li class="page-item"><a class="page-link">3</a></li>
+			<li class="page-item"><a class="page-link">Next</a></li>
+		</ul>
+	</nav>
+</div>
+
+<script>
+		function LoadPopup() {
+		   var myModal = new bootstrap.Modal(document.getElementById('ModalTaskCreate'));
+		   $('#Title').val('');
+		   $('#Description').val('');
+		   $('#DueDate').val('');
+		   $('#Remarks').val('');
+
+		  myModal.show();
+		}
+	function LoadEditPopup(Id) {
+		debugger;
+		$.post('@Url.Action("LoadTaskForm", "TaskManagementController1")',{Id:Id},function (result) {
+			debugger
+
+					$('#ModalTaskEdit').html(result);
+					$('#ModalTaskEdit').modal('show');
+
+			});
+	}
+
+		function SaveTaskCreateData() {
+			debugger;
+				if ($('#Title').val() == '' ||$('#Description').val() == '' ||$('#DueDate').val() == '' ||$('#Remarks').val() == '') 
+				{
+					toastr.warning("Please fill required fields");
+	
+		return;
+	}
+			else{
+	$.post('@Url.Action("TaskCreate", "TaskManagementController1")',
+				   $('#taskForm').serialize(),
+				   function (res) {
+					   if (res.success) {
+						   alert("Task created successfully");
+						   $('#ModalTaskCreate').modal('hide');
+						   location.reload();
+					   } else {
+						   alert(res.error);
+					   }
+				   });
+			}
+
+
+		}
+
+
+
+	function SaveTaskUpdateData() {
+		debugger;
+		$.post('@Url.Action("TaskFormUpdate", "TaskManagementController1")',$('#taskEditForm').serialize(),function (result) {
+				if (result.success) {
+					alert('Updated Successfully');
+						location.reload();
+					$('#ModalTaskEdit').modal('hide');
+
+
+
+				} else {
+					alert('Insert failed');
+				}
+		});
+	}
+		function DeleteTask(id) {
+		   if (!confirm('Are you sure you want to delete this task?')) {
+			return;
+		   }
+
+		   $.post(
+			'@Url.Action("TaskDelete", "TaskManagementController1")',
+			{ id: id },
+			function (result) {
+				if (result.success) {
+					alert('Deleted Successfully');
+					location.reload();
+				}
+				else {
+					alert(result.error);
+				}
+			}
+		   );
+		}
+		function SearchTask() {
+			debugger;
+			$.post('@Url.Action("TaskSearch", "TaskManagementController1")',{ searchText:$('#searchString').val() },function (result)
+			{
+					debugger;
+				if(result){
+
+						$('Div.table-responsive').html('')
+							$('Div.table-responsive').html(result)
+				}
+				else{
+					alert("Search Failed");
+				}
+					
+					
+				}
+			);
+		}
+
+</script>

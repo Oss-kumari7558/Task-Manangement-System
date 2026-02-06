@@ -1,0 +1,79 @@
+﻿@using Task_Manangement_System.Views.TaskManagementController1.PartialView.LoadTaskCreateForm
+@model LoadTaskCreateFormPageModel
+@{
+	Layout = null;
+}
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<div class="modal-dialog modal-dialog-centered modal-lg">
+	<div class="modal-content border rounded shadow">
+
+		<div class="modal-header bg-warning  btn-outline-info">
+			<h5 class="modal-title" id="taskModalLabel"> Edit Task Form</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+		</div>
+
+		<div class="modal-body modalBody">
+			<form id="taskEditForm">
+				<input type="hidden" asp-for="Id" />
+
+				<div class="mb-3">
+					<label class="form-label">Task Title</label>
+					<input type="text" asp-for="Title" class="form-control" placeholder="Enter task title" />
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Task Description</label>
+					<textarea asp-for="Description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Task Due Date</label>
+					<input type="date" asp-for="DueDate" class="form-control" />
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Task Status</label>
+					<select asp-for="Status" class="form-select">
+						<option value="">Select status</option>
+						<option value="Pending">Pending</option>
+						<option value="InProgress">In Progress</option>
+						<option value="Completed">Completed</option>
+						<option value="OnHold">On Hold</option>
+					</select>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Task Remarks</label>
+					<textarea asp-for="Remarks" class="form-control" rows="2" placeholder="Enter remarks"></textarea>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Updated By</label>
+					<textarea asp-for="UpdatedBy" class="form-control" rows="2" placeholder="Updated By"></textarea>
+				</div>
+			</form>
+
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-success" onclick="SaveTaskUpdateData()">Update</button>
+		</div>
+	</div>
+</div>
+<script>
+	
+</script>

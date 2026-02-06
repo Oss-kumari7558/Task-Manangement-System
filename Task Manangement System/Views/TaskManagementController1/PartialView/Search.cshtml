@@ -1,0 +1,62 @@
+﻿@model List<TaskCreateRequestModel>
+@{
+	Layout = null;
+}
+
+	<table class="table table-hover table-bordered align-middle">
+		<thead class="table-dark">
+			<tr>
+				<th>Title</th>
+				<th>Status</th>
+				<th>Due Date</th>
+				<th>Description</th>
+				<th>Remarks</th>
+				<th>CreatedBy</th>
+				<th>CreatedOn</th>
+				<th>UpdatedBy</th>
+				<th>LastUpdatedOn</th>
+				<th class="text-center">Actions</th>
+			</tr>
+		</thead>
+
+
+		<tbody id="taskTableBody">
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.Title</td>
+
+					<td>
+						@if (item.Status == "Completed")
+						{
+							<span class="badge bg-success">Completed</span>
+						}
+						else if (item.Status == "Pending")
+						{
+							<span class="badge bg-warning text-dark">Pending</span>
+						}
+						else
+						{
+							<span class="badge bg-secondary">@item.Status</span>
+						}
+					</td>
+
+					<td>@item.DueDate.ToString("dd-MM-yyyy")</td>
+					<td>@item.Description</td>
+					<td>@item.Remarks</td>
+					<td>@item.CreatedBy</td>
+					<td>@item.CreatedOn.ToString("dd-MM-yyyy")</td>
+					<td>@item.UpdatedBy</td>
+					<td>@(item.LastUpdatedOn.ToString("dd-MM-yyyy"))</td>
+					<td class="text-center">
+						<a class="btn btn-warning btn-sm"
+						   onclick="LoadEditPopup(@item.Id)">Edit</a>
+						<a class="btn btn-danger btn-sm"
+						   onclick="DeleteTask(@item.Id)">Delete</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+
+
+	</table>
